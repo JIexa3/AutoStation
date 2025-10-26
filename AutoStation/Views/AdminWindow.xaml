@@ -1,0 +1,454 @@
+<Window x:Class="AutoStation.Views.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:controls="clr-namespace:AutoStation.Controls"
+        mc:Ignorable="d"
+        Title="Панель администратора" Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        Name="AdminWindowName">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Верхняя панель -->
+        <materialDesign:ColorZone Mode="PrimaryDark"
+                                 Padding="16"
+                                 materialDesign:ShadowAssist.ShadowDepth="Depth2">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Left" 
+                          Orientation="Horizontal">
+                    <controls:LogoControl/>
+                    <TextBlock Text="AutoStation"
+                             Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                             VerticalAlignment="Center"
+                             Margin="16,0,0,0"/>
+                </StackPanel>
+                
+                <StackPanel DockPanel.Dock="Right" 
+                          Orientation="Horizontal" 
+                          HorizontalAlignment="Right">
+                    <TextBlock Text="Администратор"
+                             VerticalAlignment="Center"
+                             Margin="0,0,16,0"/>
+                    <Button Content="Выйти"
+                            Click="LogoutButton_Click"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Foreground="White"
+                            BorderBrush="White"/>
+                </StackPanel>
+            </DockPanel>
+        </materialDesign:ColorZone>
+
+        <!-- Основной контент -->
+        <TabControl Grid.Row="1" 
+                   Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
+                   materialDesign:ColorZoneAssist.Mode="Standard">
+            
+            <!-- Вкладка статистики -->
+            <TabItem Header="Статистика" Width="100">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Фильтры -->
+                    <materialDesign:Card Grid.Row="0" Margin="0,0,0,16">
+                        <StackPanel Margin="16">
+                            <TextBlock Text="Фильтры"
+                                     Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                     Margin="0,0,0,16"/>
+                            <ComboBox x:Name="TransactionsDateRangeComboBoxControl"
+                                    SelectionChanged="TransactionsDateRangeComboBox_SelectionChanged"
+                                    Style="{StaticResource MaterialDesignFilledComboBox}"
+                                    materialDesign:HintAssist.Hint="Период"
+                                    Margin="0,0,0,8">
+                                <ComboBoxItem Content="За сегодня"/>
+                                <ComboBoxItem Content="За неделю"/>
+                                <ComboBoxItem Content="За месяц"/>
+                                <ComboBoxItem Content="За все время"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <!-- Статистика -->
+                    <materialDesign:Card Grid.Row="1" Margin="0,0,0,16">
+                        <Grid Margin="16">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Общая сумма продаж -->
+                            <StackPanel Grid.Column="0" Margin="8">
+                                <TextBlock Text="Общая сумма продаж"
+                                         Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                         TextAlignment="Center"/>
+                                <TextBlock x:Name="TotalSalesValueTextBlock"
+                                         Text="0 ₽"
+                                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                         TextAlignment="Center"
+                                         Margin="0,8,0,0"/>
+                            </StackPanel>
+
+                            <!-- Количество транзакций -->
+                            <StackPanel Grid.Column="1" Margin="8">
+                                <TextBlock Text="Количество транзакций"
+                                         Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                         TextAlignment="Center"/>
+                                <TextBlock x:Name="TransactionsCountValueTextBlock"
+                                         Text="0"
+                                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                         TextAlignment="Center"
+                                         Margin="0,8,0,0"/>
+                            </StackPanel>
+
+                            <!-- Средний чек -->
+                            <StackPanel Grid.Column="2" Margin="8">
+                                <TextBlock Text="Средний чек"
+                                         Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                         TextAlignment="Center"/>
+                                <TextBlock x:Name="AverageCheckValueTextBlock"
+                                         Text="0 ₽"
+                                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                         TextAlignment="Center"
+                                         Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </materialDesign:Card>
+
+                    <!-- Таблица транзакций -->
+                    <DataGrid x:Name="TransactionsDataGridControl"
+                             Grid.Row="2"
+                             AutoGenerateColumns="False"
+                             IsReadOnly="True"
+                             ItemsSource="{Binding Transactions}"
+                             Margin="10">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Дата" 
+                                              Binding="{Binding Date, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Пользователь" 
+                                              Binding="{Binding User.Email}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Колонка" 
+                                              Binding="{Binding FuelColumn.Number}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Тип топлива" 
+                                              Binding="{Binding Fuel.Name}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Объем (л)" 
+                                              Binding="{Binding Volume}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Цена за литр" 
+                                              Binding="{Binding UnitPrice}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Способ оплаты" 
+                                              Binding="{Binding PaymentMethod}"
+                                              Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- Вкладка пользователей -->
+            <TabItem Header="Пользователи" Width="111">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <DataGrid x:Name="UsersDataGrid"
+                             Grid.Row="1"
+                             AutoGenerateColumns="False"
+                             IsReadOnly="False"
+                             ItemsSource="{Binding Users}"
+                             CellEditEnding="UsersDataGrid_CellEditEnding"
+                             Margin="10">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Имя пользователя"
+                                              Binding="{Binding Username}"
+                                              Width="*"
+                                              IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Email"
+                                              Binding="{Binding Email}"
+                                              Width="*"
+                                              IsReadOnly="True"/>
+                            <DataGridCheckBoxColumn Header="Администратор"
+                                                  Binding="{Binding IsAdmin, UpdateSourceTrigger=PropertyChanged}"
+                                                  Width="Auto"/>
+                            <DataGridCheckBoxColumn Header="Email подтвержден"
+                                                  Binding="{Binding IsEmailVerified}"
+                                                  Width="Auto"
+                                                  IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- Вкладка топлива -->
+            <TabItem Header="Топливо">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Форма добавления/редактирования топлива -->
+                    <materialDesign:Card Grid.Row="0" Margin="10" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="Управление топливом"
+                                     Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                     Margin="0,0,0,16"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox x:Name="NewFuelNameTextBox"
+                                       Grid.Column="0"
+                                       Margin="0,0,8,0"
+                                       materialDesign:HintAssist.Hint="Название топлива"
+                                       Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
+
+                                <TextBox x:Name="FuelVolumeTextBox"
+                                       Grid.Column="1"
+                                       Margin="8,0"
+                                       materialDesign:HintAssist.Hint="Объем (л)"
+                                       Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
+
+                                <TextBox x:Name="FuelPriceTextBox"
+                                       Grid.Column="2"
+                                       Margin="8,0"
+                                       materialDesign:HintAssist.Hint="Цена за литр"
+                                       Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
+
+                                <Button Grid.Column="3"
+                                        Margin="8,0,0,0"
+                                        Content="Добавить"
+                                        Click="AddFuelButton_Click"
+                                        Style="{StaticResource MaterialDesignRaisedButton}"/>
+                            </Grid>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <DataGrid Grid.Row="1"
+                             x:Name="FuelsDataGrid"
+                             AutoGenerateColumns="False"
+                             ItemsSource="{Binding Fuels}"
+                             Margin="10"
+                             CellEditEnding="FuelsDataGrid_CellEditEnding">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Название"
+                                              Binding="{Binding Name}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Объем (л)"
+                                              Binding="{Binding Volume, StringFormat=N2}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Цена за литр"
+                                              Binding="{Binding Price, StringFormat=N2}"
+                                              Width="*"/>
+                            <DataGridTemplateColumn Width="Auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Удалить"
+                                                Click="DeleteFuel_Click"
+                                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                                Margin="4"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- Вкладка колонок -->
+            <TabItem Header="Колонки">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Форма добавления колонки -->
+                    <materialDesign:Card Grid.Row="0" Margin="10" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="Добавить колонку"
+                                     Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                     Margin="0,0,0,16"/>
+                            
+                            <TextBox x:Name="ColumnNumberTextBox"
+                                   materialDesign:HintAssist.Hint="Номер колонки"
+                                   Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                   Margin="0,0,0,8"/>
+                            
+                            <ListBox x:Name="FuelTypesForColumnListBox"
+                                    ItemsSource="{Binding Fuels}"
+                                    SelectionMode="Multiple"
+                                    Margin="0,8,0,8">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Content="{Binding Name}"
+                                                IsChecked="{Binding IsSelected}"
+                                                Tag="{Binding Id}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            
+                            <Button Content="Добавить колонку"
+                                    Click="AddColumnButton_Click"
+                                    Style="{StaticResource MaterialDesignRaisedButton}"
+                                    Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <DataGrid x:Name="ColumnsDataGrid"
+                             Grid.Row="1"
+                             AutoGenerateColumns="False"
+                             ItemsSource="{Binding FuelColumns}"
+                             CellEditEnding="ColumnsDataGrid_CellEditEnding"
+                             Margin="10"
+                             MinRowHeight="50">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Номер"
+                                              Binding="{Binding Number}"
+                                              Width="Auto"/>
+                            <DataGridTemplateColumn Header="Доступное топливо" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ItemsControl ItemsSource="{Binding FuelColumnFuels}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Fuel.Name}"
+                                                             Margin="0,0,8,0"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                        </ItemsControl>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Действия" Width="Auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="Изменить топливо"
+                                                    Click="EditColumnFuels_Click"
+                                                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                                                    Margin="4"/>
+                                            <Button Content="Удалить"
+                                                    Click="DeleteColumn_Click"
+                                                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                                                    Margin="4"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- Вкладка транзакций -->
+            <TabItem Header="Транзакции" Width="100">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <DataGrid x:Name="TransactionsDataGrid"
+                             Grid.Row="1"
+                             AutoGenerateColumns="False"
+                             IsReadOnly="True"
+                             ItemsSource="{Binding Transactions}"
+                             Margin="10">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Дата"
+                                              Binding="{Binding Date, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Пользователь"
+                                              Binding="{Binding User.Email}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Колонка"
+                                              Binding="{Binding FuelColumn.Number}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Тип топлива"
+                                              Binding="{Binding Fuel.Name}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Объем (л)"
+                                              Binding="{Binding Volume}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Цена за литр"
+                                              Binding="{Binding UnitPrice}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Способ оплаты"
+                                              Binding="{Binding PaymentMethod}"
+                                              Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- Вкладка бронирований -->
+            <TabItem Header="Бронирования" Width="110">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <DataGrid x:Name="ReservationsDataGrid"
+                             Grid.Row="1"
+                             AutoGenerateColumns="False"
+                             IsReadOnly="True"
+                             ItemsSource="{Binding Reservations}"
+                             Margin="10">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Дата бронирования"
+                                              Binding="{Binding ReservationTime, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Истекает"
+                                              Binding="{Binding ExpirationTime, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Пользователь"
+                                              Binding="{Binding User.Email}"
+                                              Width="*"/>
+                            <DataGridTextColumn Header="Колонка"
+                                              Binding="{Binding FuelColumn.Number}"
+                                              Width="*"/>
+                            <DataGridCheckBoxColumn Header="Активно"
+                                                  Binding="{Binding IsActive}"
+                                                  Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

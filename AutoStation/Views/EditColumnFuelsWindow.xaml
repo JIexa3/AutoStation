@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="AutoStation.Views.EditColumnFuelsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="Редактирование типов топлива колонки" Height="450" Width="400"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource MaterialDesignWindow}">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Выберите типы топлива для колонки:"
+                   Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                   Margin="0,0,0,16"/>
+
+        <ListBox x:Name="FuelsListBox"
+                 Grid.Row="1"
+                 SelectionMode="Multiple"
+                 Margin="0,0,0,16"
+                 Style="{StaticResource MaterialDesignListBox}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox Content="{Binding Name}"
+                             IsChecked="{Binding IsSelected}"
+                             Style="{StaticResource MaterialDesignCheckBox}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Сохранить"
+                    Click="SaveButton_Click"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    Margin="0,0,8,0"/>
+            <Button Content="Отмена"
+                    Click="CancelButton_Click"
+                    Style="{StaticResource MaterialDesignFlatButton}"/>
+        </StackPanel>
+    </Grid>
+</Window>

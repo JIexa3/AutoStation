@@ -1,0 +1,64 @@
+<Window x:Class="AutoStation.Views.RegisterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:controls="clr-namespace:AutoStation.Controls"
+        mc:Ignorable="d"
+        Title="Регистрация" Height="600" Width="400"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        FontFamily="{materialDesign:MaterialDesignFont}">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+            <controls:LogoControl Width="48" Height="48" Margin="0,0,16,0"/>
+            <TextBlock Text="Регистрация"
+                     Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                     VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Margin="0,0,0,16">
+            <TextBox x:Name="UsernameTextBox"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="Имя пользователя"
+                    Margin="0,8"/>
+
+            <TextBox x:Name="EmailTextBox"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="Email"
+                    Margin="0,8"/>
+
+            <PasswordBox x:Name="PasswordBox"
+                        Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                        materialDesign:HintAssist.Hint="Пароль"
+                        Margin="0,8"/>
+
+            <PasswordBox x:Name="ConfirmPasswordBox"
+                        Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                        materialDesign:HintAssist.Hint="Подтвердите пароль"
+                        Margin="0,8"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Назад"
+                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                    Click="BackToLoginButton_Click"
+                    Margin="0,0,8,0"/>
+
+            <Button x:Name="RegisterButton"
+                    Content="Зарегистрироваться"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    Click="RegisterButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

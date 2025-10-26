@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <!-- Фон -->
+    <rect width="512" height="512" rx="64" fill="#1976D2"/>
+    
+    <!-- Заправочная колонка -->
+    <g transform="translate(128, 96)" fill="#FFFFFF">
+        <!-- Основание -->
+        <rect x="0" y="240" width="256" height="80" rx="8"/>
+        <!-- Стойка -->
+        <rect x="88" y="64" width="80" height="176"/>
+        <!-- Верхняя часть -->
+        <rect x="48" y="32" width="160" height="48" rx="8"/>
+        <!-- Шланг -->
+        <path d="M 208 56 
+                 C 288 56, 288 136, 288 196
+                 L 288 256
+                 L 256 256
+                 L 256 196
+                 C 256 146, 256 88, 208 88
+                 Z" />
+    </g>
+    
+    <!-- Название -->
+    <text x="256" y="448" 
+          font-family="Arial, sans-serif" 
+          font-size="48" 
+          font-weight="bold" 
+          fill="#FFFFFF" 
+          text-anchor="middle">
+        AutoStation
+    </text>
+</svg>

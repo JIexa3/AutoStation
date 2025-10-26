@@ -1,0 +1,392 @@
+<Window x:Class="AutoStation.Views.UserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoStation.Views"
+        xmlns:controls="clr-namespace:AutoStation.Controls"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="AutoStation - Личный кабинет" Height="700" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}">
+
+    <materialDesign:DialogHost>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Верхняя панель -->
+            <materialDesign:ColorZone Mode="PrimaryDark"
+                                     Padding="16"
+                                     materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                     ClipToBounds="True">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Left" 
+                              Orientation="Horizontal">
+                        <controls:LogoControl/>
+                        <TextBlock Text="AutoStation"
+                                 Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                 VerticalAlignment="Center"
+                                 Margin="16,0,0,0"/>
+                    </StackPanel>
+                    
+                    <StackPanel DockPanel.Dock="Right" 
+                              Orientation="Horizontal" 
+                              HorizontalAlignment="Right">
+                        <TextBlock Text="{Binding Email}"
+                                 VerticalAlignment="Center"
+                                 Margin="0,0,16,0"/>
+                        <Button Content="Выйти"
+                                Click="LogoutButton_Click"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Foreground="White"
+                                BorderBrush="White"/>
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
+
+            <!-- Основной контент -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Боковое меню -->
+                <materialDesign:Card Grid.Column="0" 
+                                   MinWidth="250"
+                                   Margin="16"
+                                   UniformCornerRadius="8">
+                    <StackPanel Margin="8">
+                        <TextBlock Text="Меню"
+                                 Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                 Margin="16,16,16,8"/>
+                        
+                        <ListBox x:Name="NavigationListBox" 
+                                SelectionChanged="NavigationListBox_SelectionChanged">
+                            <ListBoxItem x:Name="RefuelTab" IsSelected="True">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="GasStation" 
+                                                           Margin="0,0,8,0"
+                                                           VerticalAlignment="Center"/>
+                                    <TextBlock Text="Заправка"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem x:Name="ProfileTab">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="AccountCircle" 
+                                                           Margin="0,0,8,0"
+                                                           VerticalAlignment="Center"/>
+                                    <TextBlock Text="Профиль"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem x:Name="HistoryTab">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="History" 
+                                                           Margin="0,0,8,0"
+                                                           VerticalAlignment="Center"/>
+                                    <TextBlock Text="История"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                        </ListBox>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Контент -->
+                <Grid Grid.Column="1" Margin="0,16,16,16">
+                    <!-- Заправка -->
+                    <Grid x:Name="RefuelContent">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <materialDesign:Card Grid.Row="0" 
+                                           Margin="0,0,0,16"
+                                           UniformCornerRadius="8">
+                            <Grid Margin="16">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Text="Заправка"
+                                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                         Margin="0,0,0,16"/>
+
+                                <TextBlock Grid.Row="1"
+                                         Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                         TextWrapping="Wrap"
+                                         Opacity="0.6"
+                                         Margin="0,0,0,16">
+                                    Чтобы заказать топливо:
+                                    1. Укажите колонку для заправки
+                                    2. Выберите тип топлива из выпадающего списка
+                                    3. Введите необходимое количество литров
+                                    4. Нажмите кнопку "Заказать" для оформления заказа
+                                    5. На следующей странице введите данные для оплаты
+                                </TextBlock>
+
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                        <ComboBox x:Name="FuelComboBox"
+                                                 SelectionChanged="FuelComboBox_SelectionChanged"
+                                                 materialDesign:HintAssist.Hint="Тип топлива"
+                                                 Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock>
+                                                        <Run Text="{Binding Name}"/>
+                                                        <Run Text=" - "/>
+                                                        <Run Text="{Binding Price, StringFormat=N2}"/>
+                                                        <Run Text=" ₽/л"/>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" Margin="0,0,16,0">
+                                        <ComboBox x:Name="ColumnComboBox"
+                                                 SelectionChanged="ColumnComboBox_SelectionChanged"
+                                                 materialDesign:HintAssist.Hint="Колонка"
+                                                 Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Number, StringFormat='Колонка {0}'}"/>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2" Margin="0,0,16,0">
+                                        <TextBox x:Name="VolumeTextBox"
+                                                TextChanged="VolumeTextBox_TextChanged"
+                                                materialDesign:HintAssist.Hint="Объем (л)"
+                                                Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
+                                        
+                                        <ComboBox x:Name="PaymentMethodComboBox"
+                                                 materialDesign:HintAssist.Hint="Способ оплаты"
+                                                 Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                                                 Margin="0,8,0,0">
+                                            <ComboBoxItem Content="Наличными"/>
+                                            <ComboBoxItem Content="Картой"/>
+                                        </ComboBox>
+
+                                        <TextBlock x:Name="TotalPriceTextBlock"
+                                                 Text="Итого к оплате: 0.00 ₽"
+                                                 Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                 Margin="0,8,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="3" 
+                                              Orientation="Horizontal">
+                                        <Button Content="Оплатить"
+                                                Click="PayButton_Click"
+                                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                                Margin="0,0,8,0"/>
+                                        <Button Content="Забронировать"
+                                                Click="ReservationButton_Click"
+                                                Style="{StaticResource MaterialDesignOutlinedButton}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </materialDesign:Card>
+
+                        <materialDesign:Card Grid.Row="1"
+                                           Margin="0,0,0,16"
+                                           UniformCornerRadius="8">
+                            <Grid Margin="16">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Text="Доступность топлива"
+                                         Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                         Margin="0,0,0,16"/>
+
+                                <DataGrid x:Name="FuelAvailabilityGrid"
+                                        Grid.Row="1"
+                                        AutoGenerateColumns="False"
+                                        IsReadOnly="True"
+                                        materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                                        materialDesign:DataGridAssist.ColumnHeaderPadding="8">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Номер колонки"
+                                                          Binding="{Binding Column.Number}"
+                                                          Width="120"/>
+                                        <DataGridTextColumn Header="Тип топлива"
+                                                          Binding="{Binding Fuel.Name}"
+                                                          Width="150"/>
+                                        <DataGridTextColumn Header="Остаток (л)"
+                                                          Binding="{Binding Fuel.Volume, StringFormat=N2}"
+                                                          Width="120"/>
+                                        <DataGridTextColumn Header="Цена (₽/л)"
+                                                          Binding="{Binding Fuel.Price, StringFormat=N2}"
+                                                          Width="120"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </materialDesign:Card>
+                    </Grid>
+
+                    <!-- Профиль -->
+                    <Grid x:Name="ProfileContent" Visibility="Collapsed">
+                        <materialDesign:Card UniformCornerRadius="8"
+                                           MaxWidth="600"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top">
+                            <Grid Margin="32">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="32"/> 
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Личные данные -->
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Личные данные"
+                                             Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                             Margin="0,0,0,24"/>
+
+                                    <TextBox x:Name="FirstNameTextBox"
+                                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                             materialDesign:HintAssist.Hint="Имя"
+                                             Margin="0,0,0,16"/>
+
+                                    <TextBox x:Name="LastNameTextBox"
+                                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                             materialDesign:HintAssist.Hint="Фамилия"
+                                             Margin="0,0,0,16"/>
+
+                                    <TextBox x:Name="PhoneTextBox"
+                                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                             materialDesign:HintAssist.Hint="Телефон"
+                                             Margin="0,0,0,16"/>
+
+                                    <TextBox x:Name="EmailTextBox"
+                                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                             materialDesign:HintAssist.Hint="Email"
+                                             IsReadOnly="True"
+                                             Margin="0,0,0,24"/>
+
+                                    <Button x:Name="SaveProfileButton"
+                                            Content="Сохранить изменения"
+                                            Click="SaveProfileButton_Click"
+                                            Style="{StaticResource MaterialDesignRaisedButton}"
+                                            HorizontalAlignment="Right"/>
+                                </StackPanel>
+
+                                <!-- Вертикальный разделитель -->
+                                <Separator Grid.Column="1" 
+                                         Style="{StaticResource MaterialDesignDarkSeparator}"
+                                         Width="1"
+                                         VerticalAlignment="Stretch"
+                                         Margin="16,0"/>
+
+                                <!-- Смена пароля -->
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Смена пароля"
+                                             Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                             Margin="0,0,0,24"/>
+
+                                    <PasswordBox x:Name="CurrentPasswordBox"
+                                               Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                                               materialDesign:HintAssist.Hint="Текущий пароль"
+                                               Margin="0,0,0,16"/>
+
+                                    <PasswordBox x:Name="NewPasswordBox"
+                                               Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                                               materialDesign:HintAssist.Hint="Новый пароль"
+                                               PasswordChanged="NewPasswordBox_PasswordChanged"
+                                               Margin="0,0,0,8"/>
+
+                                    <TextBlock x:Name="PasswordRequirementsTextBlock"
+                                             Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                             TextWrapping="Wrap"
+                                             Margin="0,0,0,16">
+                                        <Run Text="Требования к паролю:"/>
+                                        <LineBreak/>
+                                        <Run Text="• Минимум 6 символов"/>
+                                        <LineBreak/>
+                                        <Run Text="• Хотя бы одна заглавная буква"/>
+                                        <LineBreak/>
+                                        <Run Text="• Хотя бы одна строчная буква"/>
+                                        <LineBreak/>
+                                        <Run Text="• Хотя бы одна цифра"/>
+                                    </TextBlock>
+
+                                    <PasswordBox x:Name="ConfirmPasswordBox"
+                                               Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                                               materialDesign:HintAssist.Hint="Подтвердите новый пароль"
+                                               Margin="0,0,0,24"/>
+
+                                    <Button x:Name="ChangePasswordButton"
+                                            Content="Сменить пароль"
+                                            Click="ChangePasswordButton_Click"
+                                            Style="{StaticResource MaterialDesignRaisedButton}"
+                                            HorizontalAlignment="Right"/>
+                                </StackPanel>
+                            </Grid>
+                        </materialDesign:Card>
+                    </Grid>
+
+                    <!-- История -->
+                    <Grid x:Name="HistoryContent" Visibility="Collapsed">
+                        <materialDesign:Card UniformCornerRadius="8">
+                            <Grid Margin="16">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Text="История операций"
+                                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                         Margin="0,0,0,16"/>
+
+                                <DataGrid Grid.Row="1"
+                                         x:Name="HistoryDataGrid"
+                                         AutoGenerateColumns="False"
+                                         IsReadOnly="True"
+                                         materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                                         materialDesign:DataGridAssist.ColumnHeaderPadding="8">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Дата"
+                                                          Binding="{Binding Date, StringFormat=\{0:dd.MM.yyyy HH:mm\}}"
+                                                          Width="150"/>
+                                        <DataGridTextColumn Header="Операция"
+                                                          Binding="{Binding Type}"
+                                                          Width="120"/>
+                                        <DataGridTextColumn Header="Описание"
+                                                          Binding="{Binding Description}"
+                                                          Width="*"/>
+                                        <DataGridTextColumn Header="Сумма"
+                                                          Binding="{Binding Amount, StringFormat=N2}"
+                                                          Width="120"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </materialDesign:Card>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </materialDesign:DialogHost>
+</Window>
