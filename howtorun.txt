@@ -1,0 +1,13 @@
+1) Разархивировать папку на свой компьютер
+2) Открыть SQL Server Management Studio
+3) Экспортировать из папки в Sql файл .backpack с помощью: импорта приложения уровня данных
+4) Зайди в папку :AutoStation- и открыть AutoStaion.sln
+5)После загрузки всех файлов найти файлы :AutoStationContext.cs
+6) Найти строку подключения: optionsBuilder.UseSqlServer(@"Data Source=HOME-PC;Initial Catalog=AutoStation;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+   
+
+Взять строку подключения из SQL Server Management Studio и вставить в UseSqlServer(.....
+7)Можно успешно возвращаться и запускать через wpf по кнопки:Запуск AutoStation
+8)Исходные данные: 
+Вход для Администратора:admin(логин) admin123(пароль) и можете пользоваться возможностями админа
+Вход для пользователя через регистрацию.
